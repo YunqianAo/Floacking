@@ -48,6 +48,9 @@ public class FlockManager : MonoBehaviour
     // This method initializes the fish by spawning them within the defined limits
     void Start()
     {
+        RenderSettings.fogColor = Camera.main.backgroundColor;
+        RenderSettings.fogDensity = 0.03f;
+        RenderSettings.fog = true;
         // Initialize the array to hold all the fish
         allFish = new GameObject[numFish];
 

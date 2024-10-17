@@ -20,60 +20,60 @@ public class Flock : MonoBehaviour
     void Start()
     {
         // Set initial speed randomly between minimum and maximum speed set in the FlockManager
-        speed = Random.Range(0.5f,1);
+        speed = Random.Range(FlockManager.FM.minSpeed, FlockManager.FM.maxSpeed);
     }
 
     // Update is called once per frame
     // Handles fish movement, boundary checks, and rule application (cohesion, separation, alignment)
     void Update()
     {
-        if (Random.Range(0,5)<1) {
-          ApplyFlockingRules();
+        //if (Random.Range(0,5)<1) {
+        //  ApplyFlockingRules();
 
+        //}
+        //transform.Translate(0,0,Time.deltaTime*speed);
+        // Define the swimming area boundary (based on the swimLimits set in FlockManager)
+        Bounds b = new Bounds(FlockManager.FM.transform.position, FlockManager.FM.swimLimits * 2);
+
+        // If the fish is outside the boundary, set turning to true to make it turn back
+        if (!b.Contains(transform.position))
+        {
+            turning = true;
         }
-        transform.Translate(0,0,Time.deltaTime*speed);
-        //// Define the swimming area boundary (based on the swimLimits set in FlockManager)
-        //Bounds b = new Bounds(FlockManager.FM.transform.position, FlockManager.FM.swimLimits * 2);
+        else
+        {
+            turning = false;
+        }
 
-        //// If the fish is outside the boundary, set turning to true to make it turn back
-        //if (!b.Contains(transform.position))
-        //{
-        //    turning = true;
-        //}
-        //else
-        //{
-        //    turning = false;
-        //}
+        // If the fish needs to turn (because it hit a boundary)
+        if (turning)
+        {
+            // Calculate the direction towards the center of the swim area
+            Vector3 direction = FlockManager.FM.transform.position - transform.position;
 
-        //// If the fish needs to turn (because it hit a boundary)
-        //if (turning)
-        //{
-        //    // Calculate the direction towards the center of the swim area
-        //    Vector3 direction = FlockManager.FM.transform.position - transform.position;
-            
-        //    // Smoothly rotate towards the center using Slerp (Spherical Linear Interpolation)
-        //    transform.rotation = Quaternion.Slerp(
-        //        transform.rotation, 
-        //        Quaternion.LookRotation(direction), 
-        //        FlockManager.FM.rotationSpeed * Time.deltaTime);
-        //}
-        //else
-        //{
-        //    // Randomly adjust the fish's speed occasionally (10% chance per frame)
-        //    if (Random.Range(0, 100) < 10)
-        //    {
-        //        speed = Random.Range(FlockManager.FM.minSpeed, FlockManager.FM.maxSpeed);
-        //    }
+            // Smoothly rotate towards the center using Slerp (Spherical Linear Interpolation)
+            transform.rotation = Quaternion.Slerp(
+                transform.rotation,
+                Quaternion.LookRotation(direction),
+                FlockManager.FM.rotationSpeed * Time.deltaTime);
+        }
+        else
+        {
+            // Randomly adjust the fish's speed occasionally (10% chance per frame)
+            if (Random.Range(0, 100) < 10)
+            {
+                speed = Random.Range(FlockManager.FM.minSpeed, FlockManager.FM.maxSpeed);
+            }
 
-        //    // Randomly apply flocking rules occasionally (10% chance per frame)
-        //    if (Random.Range(0, 100) < 10)
-        //    {
-        //        ApplyFlockingRules();
-        //    }
-        //}
+            // Randomly apply flocking rules occasionally (10% chance per frame)
+            if (Random.Range(0, 100) < 100)
+            {
+                ApplyFlockingRules();
+            }
+        }
 
-        //// Move the fish forward based on its current speed
-        //this.transform.Translate(0, 0, speed * Time.deltaTime);
+        // Move the fish forward based on its current speed
+        this.transform.Translate(0, 0, speed * Time.deltaTime);
     }
 
     // ApplyFlockingRules() is responsible for implementing the core flocking behaviors:

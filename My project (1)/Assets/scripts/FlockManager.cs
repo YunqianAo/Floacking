@@ -12,6 +12,7 @@ public class FlockManager : MonoBehaviour
     
     // The fish prefab to instantiate for each fish in the flock
     public GameObject fishPrefab; 
+    public GameObject goalPrefab;
     
     // Number of fish in the flock
     public int numFish = 20; 
@@ -20,7 +21,7 @@ public class FlockManager : MonoBehaviour
     public GameObject[] allFish; 
     
     // Defines the 3D space within which the fish can swim
-    public Vector3 swimLimits = new Vector3(5, 5, 5); 
+    public Vector3 swimLimits = new Vector3(50, 50, 50); 
     
     // Randomly selected goal position for fish to move towards
     public Vector3 goalPos = Vector3.zero;
@@ -75,13 +76,14 @@ public class FlockManager : MonoBehaviour
     void Update()
     {
         // Occasionally change the goal position (10% chance each frame)
-        if (Random.Range(0, 100) < 10)
+        if (Random.Range(0, 10000) < 10)
         {
             // Calculate a new random goal position within the swim limits
             goalPos = this.transform.position + new Vector3(
                 Random.Range(-swimLimits.x, swimLimits.x),
                 Random.Range(-swimLimits.y, swimLimits.y),  
                 Random.Range(-swimLimits.z, swimLimits.z));
+            goalPrefab.transform.position = goalPos;
         }
     }
 }
